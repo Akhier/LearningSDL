@@ -18,6 +18,17 @@ int main(int argc, char **argv){
         std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
         return 1;
     }
+    SDL_Surface *image = SDL_LoadBMP("sample.bmp");
+    if (image == nullptr){
+        std::cout << "SDL_LoadBMP Error: " << SDL_GetError() << std::endl;
+        return 1;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
+    SDL_FreeSurface(image);
+    if (texture == nullptr){
+        std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() <<std::endl;
+        return 1;
+    }
     SDL_Quit();
     return 0;
 }
