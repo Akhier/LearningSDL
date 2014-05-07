@@ -32,6 +32,22 @@ void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y){
     SDL_QueryTexture(texture, NULL, NULL, &w, &h);
     renderTexture(texture, renderer, x, y, w, h);
 }
+void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, SDL_Rect destination, SDL_Rect *clip = nullptr){
+    SDL_RenderCopy(renderer, texture, clip, &destination);
+}
+void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, SDL_Rect *clip = nullptr){
+    SDL_Rect destination;
+    destination.x = x;
+    destination.y = y;
+    if (clip != nullptr){
+        destination.w = clip->w;
+        destination.h = clip->h;
+    }
+    else{
+        SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h);
+    }
+    renderTexture(texture, renderer, destination, clip);
+}
 
 int main(int argc, char **argv){
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -53,6 +69,16 @@ int main(int argc, char **argv){
     if (background == nullptr || image == nullptr){
         return 4;
     }
+    int imageWidth = 100, imageHeight = 100;
+    int x = SCREEN_WIDTH / 2 - imageWidth / 2, y = SCREEN_HEIGHT / 2 - imageHeight / 2;
+    SDL_Rect clips[4];
+    for (int pos = 0; pos < 4; ++pos){
+        clips[pos].x = pos / 2 * imageWidth;
+        clips[pos].y = pos % 2 * imageHeight;
+        clips[pos].w = imageWidth;
+        clips[pos].h = imageHeight;
+    }
+    int useClip = 0;
     SDL_Event e;
     bool quit = false;
     while (!quit){
@@ -61,7 +87,23 @@ int main(int argc, char **argv){
                 quit = true;
             }
             if (e.type == SDL_KEYDOWN){
-                quit = true;
+                switch (e.key.keysym.sym){
+                    case SDLK_1:
+                        useClip = 0;
+                        break;
+                    case SDLK_2:
+                        useClip = 1;
+                        break;
+                    case SDLK_3:
+                        useClip = 2;
+                        break;
+                    case SDLK_4:
+                        useClip = 3;
+                        break;
+                    default:
+                        quit = true;
+                        break;
+                }
             }
             if (e.type == SDL_MOUSEBUTTONDOWN){
                 quit = true;
@@ -74,9 +116,7 @@ int main(int argc, char **argv){
             int y = pos / xTiles;
             renderTexture(background, renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
-        int imageWidth, imageHeight;
-        SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight);
-        renderTexture(image, renderer, SCREEN_WIDTH / 2 - imageWidth / 2, SCREEN_HEIGHT / 2 - imageHeight / 2);
+        renderTexture(image, renderer, x, y, &clips[useClip]);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyTexture(background);
