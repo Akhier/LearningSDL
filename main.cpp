@@ -28,11 +28,6 @@ void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, i
     destination.h = h;
     SDL_RenderCopy(renderer, texture, NULL, &destination);
 }
-void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y){
-    int w, h;
-    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
-    renderTexture(texture, renderer, x, y, w, h);
-}
 void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, SDL_Rect destination, SDL_Rect *clip = nullptr){
     SDL_RenderCopy(renderer, texture, clip, &destination);
 }
@@ -76,20 +71,24 @@ int main(int argc, char **argv){
         logSDLError(std::cout, "SDL_Init");
         return 1;
     }
+    if (TTF_Init() != 0){
+        logSDLError(std::cout, "TTF_Init");
+        return 2;
+    }
     SDL_Window *window = SDL_CreateWindow("LearningSDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr){
         logSDLError(std::cout, "SDL_CreateWindow");
-        return 2;
+        return 3;
     }
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr){
         logSDLError(std::cout, "SDL_CreateRenderer");
-        return 3;
+        return 4;
     }
     SDL_Texture *background = loadTexture("background.bmp", renderer);
     SDL_Texture *image = loadTexture("sample.png", renderer);
     if (background == nullptr || image == nullptr){
-        return 4;
+        return 5;
     }
     int imageWidth = 100, imageHeight = 100;
     int x = SCREEN_WIDTH / 2 - imageWidth / 2, y = SCREEN_HEIGHT / 2 - imageHeight / 2;
@@ -101,6 +100,7 @@ int main(int argc, char **argv){
         clips[pos].h = imageHeight;
     }
     int useClip = 0;
+    std::string fontLocation = "fonts/FreeMono.ttf";
     SDL_Event e;
     bool quit = false;
     while (!quit){
@@ -122,6 +122,15 @@ int main(int argc, char **argv){
                     case SDLK_4:
                         useClip = 3;
                         break;
+                    case SDLK_5:
+                        fontLocation = "fonts/FreeMono.ttf";
+                        break;
+                    case SDLK_6:
+                        fontLocation = "fonts/FreeSans.ttf";
+                        break;
+                    case SDLK_7:
+                        fontLocation = "fonts/FreeSerif.ttf";
+                        break;
                     default:
                         quit = true;
                         break;
@@ -139,6 +148,13 @@ int main(int argc, char **argv){
             renderTexture(background, renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
         renderTexture(image, renderer, x, y, &clips[useClip]);
+
+        SDL_Color color = {0, 0, 0};
+        SDL_Texture *words = renderText("test string", fontLocation, color, 32, renderer);
+        if (words == nullptr){
+            return 6;
+        }
+        renderTexture(words, renderer, 0, 0);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyTexture(background);
