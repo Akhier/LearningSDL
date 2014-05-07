@@ -39,22 +39,35 @@ int main(int argc, char **argv){
         logSDLError(std::cout, "SDL_Init");
         return 1;
     }
-    SDL_Window *window = SDL_CreateWindow("LearningSDL", 100, 100, 640, 480, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("LearningSDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr){
         logSDLError(std::cout, "SDL_CreateWindow");
-        return 1;
+        return 2;
     }
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr){
         logSDLError(std::cout, "SDL_CreateRenderer");
-        return 1;
+        return 3;
     }
-    SDL_Texture *texture = loadBMPTexture("sample.bmp", renderer);
+    SDL_Texture *background = loadBMPTexture("background.bmp", renderer);
+    SDL_Texture *image = loadBMPTexture("sample.bmp", renderer);
+    if (background == nullptr || image == nullptr){
+        return 4;
+    }
     SDL_RenderClear(renderer);
-    renderTexture(texture, renderer, 10, 10);
+    int backgroundWidth, backgroundHeight;
+    SDL_QueryTexture(background, NULL, NULL, &backgroundWidth, &backgroundHeight);
+    renderTexture(background, renderer, 0, 0);
+    renderTexture(background, renderer, backgroundWidth, 0);
+    renderTexture(background, renderer, 0, backgroundHeight);
+    renderTexture(background, renderer, backgroundWidth, backgroundHeight);
+    int imageWidth, imageHeight;
+    SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight);
+    renderTexture(image, renderer, SCREEN_WIDTH / 2 - imageWidth / 2, SCREEN_HEIGHT / 2 - imageHeight / 2);
     SDL_RenderPresent(renderer);
     SDL_Delay(2000);
-    SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(background);
+    SDL_DestroyTexture(image);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
