@@ -49,7 +49,7 @@ int main(int argc, char **argv){
         return 3;
     }
     SDL_Texture *background = loadTexture("background.bmp", renderer);
-    SDL_Texture *image = loadTexture("sample.bmp", renderer);
+    SDL_Texture *image = loadTexture("sample.png", renderer);
     if (background == nullptr || image == nullptr){
         return 4;
     }
