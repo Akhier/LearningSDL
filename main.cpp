@@ -54,12 +54,12 @@ int main(int argc, char **argv){
         return 4;
     }
     SDL_RenderClear(renderer);
-    int backgroundWidth, backgroundHeight;
-    SDL_QueryTexture(background, NULL, NULL, &backgroundWidth, &backgroundHeight);
-    renderTexture(background, renderer, 0, 0);
-    renderTexture(background, renderer, backgroundWidth, 0);
-    renderTexture(background, renderer, 0, backgroundHeight);
-    renderTexture(background, renderer, backgroundWidth, backgroundHeight);
+    int xTiles = SCREEN_WIDTH / TILE_SIZE, yTiles = SCREEN_HEIGHT / TILE_SIZE;
+    for (int pos = 0; pos < xTiles * yTiles; ++pos){
+        int x = pos % xTiles;
+        int y = pos / xTiles;
+        renderTexture(background, renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
     int imageWidth, imageHeight;
     SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight);
     renderTexture(image, renderer, SCREEN_WIDTH / 2 - imageWidth / 2, SCREEN_HEIGHT / 2 - imageHeight / 2);
