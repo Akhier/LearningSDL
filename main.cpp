@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <iostream>
 
-
+const int SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
 
 int main(int argc, char **argv){
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
@@ -41,4 +41,8 @@ int main(int argc, char **argv){
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
+}
+
+void logSDLError(std::ostream &os, const std::string &message){
+    os << msg << " Error: " << SDL_GetError() << std::endl;
 }
