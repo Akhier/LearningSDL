@@ -2,26 +2,19 @@
 //Using: TwinklebearDev SDL2 Tutorial at http://www.willusher.io/pages/sdl2/
 
 #include <SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 
-const int SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480, TILE_SIZE = 40;
 
 void logSDLError(std::ostream &os, const std::string &message){
     os << message << " Error: " << SDL_GetError() << std::endl;
 }
 
-SDL_Texture* loadBMPTexture(const std::string &file, SDL_Renderer *renderer){
-    SDL_Texture *texture = nullptr;
-    SDL_Surface *loadedBMP = SDL_LoadBMP(file.c_str());
-    if (loadedBMP != nullptr){
-        texture = SDL_CreateTextureFromSurface(renderer, loadedBMP);
-        SDL_FreeSurface(loadedBMP);
-        if (texture == nullptr){
-            logSDLError(std::cout, "CreateTextureFromSurface");
-        }
-    }
-    else {
-        logSDLError(std::cout, "LoadBMP");
+SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *renderer){
+    SDL_Texture *texture = IMG_LoadTexture(renderer, file.c_str());
+    if (texture == nullptr){
+        logSDLError(std::cout, "LoadTexture");
     }
     return texture;
 }
@@ -49,8 +42,8 @@ int main(int argc, char **argv){
         logSDLError(std::cout, "SDL_CreateRenderer");
         return 3;
     }
-    SDL_Texture *background = loadBMPTexture("background.bmp", renderer);
-    SDL_Texture *image = loadBMPTexture("sample.bmp", renderer);
+    SDL_Texture *background = loadTexture("background.bmp", renderer);
+    SDL_Texture *image = loadTexture("sample.bmp", renderer);
     if (background == nullptr || image == nullptr){
         return 4;
     }
