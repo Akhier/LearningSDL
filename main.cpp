@@ -19,12 +19,18 @@ SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *renderer){
     return texture;
 }
 
-void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y){
+void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, int w, int h){
     SDL_Rect destination;
     destination.x = x;
     destination.y = y;
-    SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h); //this takes three int pointers and fills them with the data about a texture (access(set to null here, we don't need it), w, and h)
+    destination.w = w;
+    destination.h = h;
     SDL_RenderCopy(renderer, texture, NULL, &destination);
+}
+void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y){
+    int w, h;
+    SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+    renderTexture(texture, renderer, x, y, w, h);
 }
 
 int main(int argc, char **argv){
