@@ -26,6 +26,14 @@ SDL_Texture* loadBMPTexture(const std::string &file, SDL_Renderer *renderer){
     return texture;
 }
 
+void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y){
+    SDL_Rect destination;
+    destination.x = x;
+    destination.y = y;
+    SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h); //this takes three int pointers and fills them with the data about a texture (access(set to null here, we don't need it), w, and h)
+    SDL_RenderCopy(renderer, texture, NULL, &destination);
+}
+
 int main(int argc, char **argv){
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
         logSDLError(std::cout, "SDL_Init");
@@ -43,7 +51,7 @@ int main(int argc, char **argv){
     }
     SDL_Texture *texture = loadBMPTexture("sample.bmp", renderer);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    renderTexture(texture, renderer, 10, 10);
     SDL_RenderPresent(renderer);
     SDL_Delay(2000);
     SDL_DestroyTexture(texture);
