@@ -29,6 +29,10 @@ int main(int argc, char **argv){
         std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() <<std::endl;
         return 1;
     }
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+    SDL_Delay(2000);
     SDL_Quit();
     return 0;
 }
