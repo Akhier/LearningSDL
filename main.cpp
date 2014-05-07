@@ -44,5 +44,21 @@ int main(int argc, char **argv){
 }
 
 void logSDLError(std::ostream &os, const std::string &message){
-    os << msg << " Error: " << SDL_GetError() << std::endl;
+    os << message << " Error: " << SDL_GetError() << std::endl;
+}
+
+SDL_Texture* loadBMPTexture(const std::string &file, SDL_Renderer *renderer){
+    SDL_Texture *texture = nullptr;
+    SDL_Surface *loadedBMP = SDL_LoadBMP(file.c_str());
+    if (loadedBMP != nullptr){
+        texture = SDL_CreateTextureFromSurface(renderer, loadedBMP);
+        SDL_FreeSurface(loadedBMP);
+        if (texture == nullptr){
+            logSDLError(std::cout, "CreateTextureFromSurface");
+        }
+    }
+    else {
+        logSDLError(std::cout, "LoadBMP");
+    }
+    return texture;
 }
