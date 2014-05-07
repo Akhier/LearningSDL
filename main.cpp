@@ -53,18 +53,32 @@ int main(int argc, char **argv){
     if (background == nullptr || image == nullptr){
         return 4;
     }
-    SDL_RenderClear(renderer);
-    int xTiles = SCREEN_WIDTH / TILE_SIZE, yTiles = SCREEN_HEIGHT / TILE_SIZE;
-    for (int pos = 0; pos < xTiles * yTiles; ++pos){
-        int x = pos % xTiles;
-        int y = pos / xTiles;
-        renderTexture(background, renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    SDL_Event e;
+    bool quit = false;
+    while (!quit){
+        while (SDL_PollEvent(&e)){
+            if (e.type == SDL_QUIT){
+                quit = true;
+            }
+            if (e.type == SDL_KEYDOWN){
+                quit = true;
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN){
+                quit = true;
+            }
+        }
+        SDL_RenderClear(renderer);
+        int xTiles = SCREEN_WIDTH / TILE_SIZE, yTiles = SCREEN_HEIGHT / TILE_SIZE;
+        for (int pos = 0; pos < xTiles * yTiles; ++pos){
+            int x = pos % xTiles;
+            int y = pos / xTiles;
+            renderTexture(background, renderer, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }
+        int imageWidth, imageHeight;
+        SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight);
+        renderTexture(image, renderer, SCREEN_WIDTH / 2 - imageWidth / 2, SCREEN_HEIGHT / 2 - imageHeight / 2);
+        SDL_RenderPresent(renderer);
     }
-    int imageWidth, imageHeight;
-    SDL_QueryTexture(image, NULL, NULL, &imageWidth, &imageHeight);
-    renderTexture(image, renderer, SCREEN_WIDTH / 2 - imageWidth / 2, SCREEN_HEIGHT / 2 - imageHeight / 2);
-    SDL_RenderPresent(renderer);
-    SDL_Delay(2000);
     SDL_DestroyTexture(background);
     SDL_DestroyTexture(image);
     SDL_DestroyRenderer(renderer);
