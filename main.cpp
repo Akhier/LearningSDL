@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <iostream>
 
 const int SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480, TILE_SIZE = 40;
@@ -47,6 +48,27 @@ void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, S
         SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h);
     }
     renderTexture(texture, renderer, destination, clip);
+}
+
+SDL_Texture* renderText(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer){
+    TTF_Font *font = TTF_OpenFont(fontfile.c_str(), fontsize);
+    if (font == nullptr){
+        logSDLError(std::cout, "TTF_OpenFont");
+        return nullptr;
+    }
+    SDL_Surface *surface = TTF_RenderText_Blended(font, message.c_str(), color);
+    if (surface == nullptr){
+        TTF_CloseFont(font);
+        logSDLError(std::cout, "TTF_RenderText");
+        return nullptr;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == nullptr){
+        logSDLError(std::cout, "CreateTextureFromSurface");
+    }
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
+    return texture;
 }
 
 int main(int argc, char **argv){
