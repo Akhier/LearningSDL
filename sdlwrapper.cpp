@@ -40,6 +40,14 @@ void SDLWrapper::renderTexture(int textureid, int x, int y, int w, int h){
     SDL_RenderCopy(_renderer, _textures[textureid], NULL, &destination);
 }
 
+void SDLWrapper::renderTexture(int textureid, int x, int y){
+    SDL_Rect destination;
+    destination.x = x;
+    destination.y = y;
+    SDL_QueryTexture(_textures[textureid], NULL, NULL, &destination.w, &destination.h);
+    SDL_RenderCopy(_renderer, _textures[textureid], NULL, &destination);
+}
+
 void SDLWrapper::renderTexture(int textureid, int destinationrect[4], int cliprect[4]){
     SDL_Rect destination, clip;
     destination.x = destinationrect[0];
@@ -99,7 +107,7 @@ int SDLWrapper::createText(const std::string &message, const std::string &fontfi
     return _textures.size() - 1;
 }
 
-int SDLWrapper::createTexture(std::string &file){
+int SDLWrapper::createTexture(const std::string &file){
     _textures.push_back(_loadtexture(file, _renderer));
     return _textures.size() - 1;
 }
@@ -108,14 +116,18 @@ void SDLWrapper::destroyTexture(int textureid){
     SDL_DestroyTexture(_textures[textureid]);
 }
 
+void SDLWrapper::setupTileset(int textureid, int tilesetinfo[4]){
+    SDL_Rect tempRect;
+    tempRect.x = tilesetinfo[0];
+    tempRect.y = tilesetinfo[1];
+    tempRect.w = tilesetinfo[2];
+    tempRect.h = tilesetinfo[3];
+    _tilesetdefinition[textureid].push_back(tempRect);
+}
+
 void SDLWrapper::setupTileset(int textureid, int tiles, int tilesetinfo[][4]){
     for (int iter = 0; iter < tiles; ++iter){
-        SDL_Rect tempRect;
-        tempRect.x = tilesetinfo[iter][0];
-        tempRect.y = tilesetinfo[iter][1];
-        tempRect.w = tilesetinfo[iter][2];
-        tempRect.h = tilesetinfo[iter][3];
-        _tilesetdefinition[textureid].push_back(tempRect);
+        setupTileset(textureid, tilesetinfo[iter]);
     }
 }
 

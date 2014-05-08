@@ -12,14 +12,16 @@ class SDLWrapper
 {
     public:
         SDLWrapper();
-        void createWindow(std::string windowtitle, int x, int y, int width, int height);
+        void createWindow(const std::string windowtitle, int x, int y, int width, int height);
         virtual ~SDLWrapper();
         int createText(const std::string &message, const std::string &fontfile, int fontsize);
-        int createTexture(std::string &file);
+        int createTexture(const std::string &file);
         void renderTexture(int textureid, int x, int y, int w, int h);
+        void renderTexture(int textureid, int x, int y);
         void renderTexture(int textureid, int destinationrect[4], int clip[4]);
         void renderTexture(int textureid, int x, int y, int clip[4]);
         void destroyTexture(int textureid);
+        void setupTileset(int textureid, int tilesetinfo[4]);
         void setupTileset(int textureid, int tiles, int tilesetinfo[][4]);
         void renderClear();
         void renderPresent();
