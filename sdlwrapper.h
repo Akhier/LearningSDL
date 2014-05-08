@@ -12,6 +12,9 @@ class SDLWrapper
         SDLWrapper();
         virtual ~SDLWrapper();
         SDL_Texture* loadTexture(const std::string &file, SDL_Renderer *renderer);
+        void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, int w, int h);
+        void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, SDL_Rect destination, SDL_Rect *clip);
+        void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, SDL_Rect *clip);
     private:
         void _logerror(std::ostream &os, const std::string &message) {os << message << " Error: " << SDL_GetError() << std::endl;}
 };
