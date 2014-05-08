@@ -94,7 +94,7 @@ SDL_Texture* SDLWrapper::_rendertext(const std::string &message, const std::stri
 }
 
 int SDLWrapper::createText(const std::string &message, const std::string &fontfile, int fontsize){
-    SDL_Color color = {0, 0, 0};
+    SDL_Color color = {0, 0, 0, 255};
     _textures.push_back(_rendertext(message, fontfile, color, fontsize, _renderer));
     return _textures.size() - 1;
 }
@@ -128,9 +128,11 @@ void SDLWrapper::renderPresent(){
 }
 
 SDLWrapper::~SDLWrapper(){
-    //SDL_DestroyTexture(image);
-    //SDL_DestroyRenderer(renderer);
-    //SDL_DestroyWindow(window);
+    for (size_t iter = 0; iter < _textures.size(); ++iter){
+        SDL_DestroyTexture(_textures[iter]);
+    }
+    SDL_DestroyRenderer(_renderer);
+    SDL_DestroyWindow(_window);
     IMG_Quit();
     TTF_Quit();
     SDL_Quit();
