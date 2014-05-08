@@ -647,10 +647,10 @@
 	"begin_code.h"
 	"close_code.h"
 
-1399545955 source:c:\programming\learningsdl\sdlwrapper.cpp
+1399547422 source:c:\programming\learningsdl\sdlwrapper.cpp
 	"sdlwrapper.h"
 
-1399547282 c:\programming\learningsdl\sdlwrapper.h
+1399547620 c:\programming\learningsdl\sdlwrapper.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
