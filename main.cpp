@@ -21,7 +21,7 @@ int main(int argc, char **argv){
     }
     wrapper->setupTileset(image, 4, clips);
     int useClip = 0;
-    std::string fontLocation = "fonts/FreeMono.ttf";
+    wrapper->setFont("fonts/FreeMono.ttf", 32);
 
     SDL_Event e;
     bool quit = false;
@@ -45,13 +45,13 @@ int main(int argc, char **argv){
                         useClip = 3;
                         break;
                     case SDLK_5:
-                        fontLocation = "fonts/FreeMono.ttf";
+                        wrapper->setFont("fonts/FreeMono.ttf", 32);
                         break;
                     case SDLK_6:
-                        fontLocation = "fonts/FreeSans.ttf";
+                        wrapper->setFont("fonts/FreeSans.ttf", 32);
                         break;
                     case SDLK_7:
-                        fontLocation = "fonts/FreeSerif.ttf";
+                        wrapper->setFont("fonts/FreeSerif.ttf", 32);
                         break;
                     default:
                         quit = true;
@@ -70,7 +70,7 @@ int main(int argc, char **argv){
             wrapper->renderTexture(background, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
         wrapper->renderTexture(image, x, y, clips[useClip]);
-        int words = wrapper->createText("test string", fontLocation, 32);
+        int words = wrapper->createText("test string");
         wrapper->renderTexture(words, 0, 0);
         wrapper->renderPresent();
     }

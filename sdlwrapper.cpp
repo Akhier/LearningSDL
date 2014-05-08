@@ -80,30 +80,23 @@ void SDLWrapper::renderTexture(int textureid, int x, int y, int clip[4] = nullpt
     SDL_RenderCopy(_renderer, _textures[textureid], &cliprect, &destination);
 }
 
-SDL_Texture* SDLWrapper::_rendertext(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer){
-    TTF_Font *font = TTF_OpenFont(fontfile.c_str(), fontsize);
-    if (font == nullptr){
-        _logerror(std::cout, "TTF_OpenFont");
-        return nullptr;
-    }
-    SDL_Surface *surface = TTF_RenderText_Blended(font, message.c_str(), color);
+SDL_Texture* SDLWrapper::_rendertext(const std::string &message, SDL_Color color){
+    SDL_Surface *surface = TTF_RenderText_Blended(_font, message.c_str(), color);
     if (surface == nullptr){
-        TTF_CloseFont(font);
         _logerror(std::cout, "TTF_RenderText");
         return nullptr;
     }
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(_renderer, surface);
     if (texture == nullptr){
         _logerror(std::cout, "CreateTextureFromSurface");
     }
     SDL_FreeSurface(surface);
-    TTF_CloseFont(font);
     return texture;
 }
 
-int SDLWrapper::createText(const std::string &message, const std::string &fontfile, int fontsize){
+int SDLWrapper::createText(const std::string &message){
     SDL_Color color = {0, 0, 0, 255};
-    _textures.push_back(_rendertext(message, fontfile, color, fontsize, _renderer));
+    _textures.push_back(_rendertext(message, color));
     return _textures.size() - 1;
 }
 
@@ -131,6 +124,10 @@ void SDLWrapper::setupTileset(int textureid, int tiles, int tilesetinfo[][4]){
     }
 }
 
+void SDLWrapper::setFont(const std::string &font, int fontsize){
+    _font = TTF_OpenFont(font.c_str(), fontsize);
+}
+
 void SDLWrapper::renderClear(){
     SDL_RenderClear(_renderer);
 }
@@ -143,6 +140,7 @@ SDLWrapper::~SDLWrapper(){
     for (size_t iter = 0; iter < _textures.size(); ++iter){
         SDL_DestroyTexture(_textures[iter]);
     }
+    TTF_CloseFont(_font);
     SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(_window);
     IMG_Quit();
