@@ -31,31 +31,45 @@ SDL_Texture* SDLWrapper::_loadtexture(const std::string &file, SDL_Renderer *ren
     return texture;
 }
 
-void SDLWrapper::renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, int w, int h){
+void SDLWrapper::renderTexture(int textureid, int x, int y, int w, int h){
     SDL_Rect destination;
     destination.x = x;
     destination.y = y;
     destination.w = w;
     destination.h = h;
-    SDL_RenderCopy(renderer, texture, NULL, &destination);
+    SDL_RenderCopy(_renderer, _textures[textureid], NULL, &destination);
 }
 
-void SDLWrapper::renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, SDL_Rect destination, SDL_Rect *clip = nullptr){
-    SDL_RenderCopy(renderer, texture, clip, &destination);
+void SDLWrapper::renderTexture(int textureid, int destinationrect[4], int cliprect[4]){
+    SDL_Rect destination, clip;
+    destination.x = destinationrect[0];
+    destination.y = destinationrect[1];
+    destination.w = destinationrect[2];
+    destination.h = destinationrect[3];
+    clip.x = cliprect[0];
+    clip.y = cliprect[1];
+    clip.w = cliprect[2];
+    clip.h = cliprect[3];
+    SDL_RenderCopy(_renderer, _textures[textureid], &clip, &destination);
 }
 
-void SDLWrapper::renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, SDL_Rect *clip = nullptr){
+void SDLWrapper::renderTexture(int textureid, int x, int y, int clip[4] = nullptr){
+    SDL_Rect cliprect;
+    cliprect.x = clip[0];
+    cliprect.y = clip[1];
+    cliprect.w = clip[2];
+    cliprect.h = clip[3];
     SDL_Rect destination;
     destination.x = x;
     destination.y = y;
     if (clip != nullptr){
-        destination.w = clip->w;
-        destination.h = clip->h;
+        destination.w = clip[2];
+        destination.h = clip[3];
     }
     else{
-        SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h);
+        SDL_QueryTexture(_textures[textureid], NULL, NULL, &destination.w, &destination.h);
     }
-    renderTexture(texture, renderer, destination, clip);
+    SDL_RenderCopy(_renderer, _textures[textureid], &cliprect, &destination);
 }
 
 SDL_Texture* SDLWrapper::_rendertext(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer){
@@ -94,13 +108,13 @@ void SDLWrapper::destroyTexture(int textureid){
     SDL_DestroyTexture(_textures[textureid]);
 }
 
-void SDLWrapper::setupTileset(int textureid, std::vector<int[]> *tilesetinfo){
-    for (int iter = 0; iter < tilesetinfo.size(); ++iter){
+void SDLWrapper::setupTileset(int textureid, int tiles, int tilesetinfo[][4]){
+    for (int iter = 0; iter < tiles; ++iter){
         SDL_Rect tempRect;
-        temp.x = tilesetinfo[iter][0];
-        temp.y = tilesetinfo[iter][1];
-        temp.w = tilesetinfo[iter][2];
-        temp.h = tilesetinfo[iter][3];
+        tempRect.x = tilesetinfo[iter][0];
+        tempRect.y = tilesetinfo[iter][1];
+        tempRect.w = tilesetinfo[iter][2];
+        tempRect.h = tilesetinfo[iter][3];
         _tilesetdefinition[textureid].push_back(tempRect);
     }
 }
@@ -114,5 +128,10 @@ void SDLWrapper::renderPresent(){
 }
 
 SDLWrapper::~SDLWrapper(){
-    //dtor
+    //SDL_DestroyTexture(image);
+    //SDL_DestroyRenderer(renderer);
+    //SDL_DestroyWindow(window);
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }
