@@ -105,6 +105,14 @@ void SDLWrapper::setupTileset(int textureid, std::vector<int[]> *tilesetinfo){
     }
 }
 
+void SDLWrapper::renderClear(){
+    SDL_RenderClear(_renderer);
+}
+
+void SDLWrapper::renderPresent(){
+    SDL_RenderPresent(_renderer);
+}
+
 SDLWrapper::~SDLWrapper(){
     //dtor
 }

@@ -21,6 +21,8 @@ class SDLWrapper
         int createTexture(std::string &file);
         void destroyTexture(int textureid);
         void setupTileset(int textureid, std::vector<int[]> *tilesetinfo);
+        void renderClear();
+        void renderPresent();
     private:
         void _logerror(std::ostream &os, const std::string &message) {os << message << " Error: " << SDL_GetError() << std::endl;}
         int _sdlwrapperfailedtoinit = -1;
