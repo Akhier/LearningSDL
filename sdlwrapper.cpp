@@ -44,3 +44,24 @@ void SDLWrapper::renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int
     }
     renderTexture(texture, renderer, destination, clip);
 }
+
+SDL_Texture* SDLWrapper::renderText(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer){
+    TTF_Font *font = TTF_OpenFont(fontfile.c_str(), fontsize);
+    if (font == nullptr){
+        _logerror(std::cout, "TTF_OpenFont");
+        return nullptr;
+    }
+    SDL_Surface *surface = TTF_RenderText_Blended(font, message.c_str(), color);
+    if (surface == nullptr){
+        TTF_CloseFont(font);
+        _logerror(std::cout, "TTF_RenderText");
+        return nullptr;
+    }
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (texture == nullptr){
+        _logerror(std::cout, "CreateTextureFromSurface");
+    }
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
+    return texture;
+}
