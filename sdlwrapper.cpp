@@ -10,24 +10,20 @@ SDLWrapper::SDLWrapper()
         _logerror(std::cout, "TTF_Init");
         _sdlwrapperfailedtoinit = 1;
     }
-    _window = SDL_CreateWindow("LearningSDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (window == nullptr){
+}
+
+void SDLWrapper::createWindow(std::string windowtitle, int x, int y, int width, int height){
+    _window = SDL_CreateWindow(windowtitle.c_str(), x, y, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (_window == nullptr){
         _logerror(std::cout, "SDL_CreateWindow");
-        _sdlwrapperfailedtoinit = 2;
     }
-    _renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == nullptr){
+    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (_renderer == nullptr){
         _logerror(std::cout, "SDL_CreateRenderer");
-        _sdlwrapperfailedtoinit = 3;
     }
 }
 
-SDLWrapper::~SDLWrapper()
-{
-    //dtor
-}
-
-SDL_Texture* SDLWrapper::loadTexture(const std::string &file, SDL_Renderer *renderer){
+SDL_Texture* SDLWrapper::_loadtexture(const std::string &file, SDL_Renderer *renderer){
     SDL_Texture *texture = IMG_LoadTexture(renderer, file.c_str());
     if (texture == nullptr){
         _logerror(std::cout, "LoadTexture");
@@ -62,7 +58,7 @@ void SDLWrapper::renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int
     renderTexture(texture, renderer, destination, clip);
 }
 
-SDL_Texture* SDLWrapper::renderText(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer){
+SDL_Texture* SDLWrapper::_rendertext(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer){
     TTF_Font *font = TTF_OpenFont(fontfile.c_str(), fontsize);
     if (font == nullptr){
         _logerror(std::cout, "TTF_OpenFont");
@@ -81,4 +77,17 @@ SDL_Texture* SDLWrapper::renderText(const std::string &message, const std::strin
     SDL_FreeSurface(surface);
     TTF_CloseFont(font);
     return texture;
+}
+
+int SDLWrapper::createTexture(std::string &file){
+    _textures.push_back(_loadtexture(file, _renderer));
+    return _textures.size() - 1;
+}
+
+void SDLWrapper::destroyTexture(int textureid){
+    SDL_DestroyTexture(_textures[textureid]);
+}
+
+SDLWrapper::~SDLWrapper(){
+    //dtor
 }
