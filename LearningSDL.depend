@@ -1,9 +1,6 @@
 # depslib dependency file v1.0
-1399513922 source:c:\programming\learningsdl\main.cpp
-	<SDL.h>
-	<SDL_image.h>
-	<SDL_ttf.h>
-	<iostream>
+1399544220 source:c:\programming\learningsdl\main.cpp
+	"sdlwrapper.h"
 
 1394937196 c:\sdl2-2.0.3\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -649,4 +646,15 @@
 	"SDL.h"
 	"begin_code.h"
 	"close_code.h"
+
+1399543872 source:c:\programming\learningsdl\sdlwrapper.cpp
+	"sdlwrapper.h"
+
+1399543069 c:\programming\learningsdl\sdlwrapper.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<iostream>
+	<vector>
+	<map>
 

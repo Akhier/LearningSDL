@@ -1,10 +1,7 @@
 //By: Akhier Dragonheart
 //Using: TwinklebearDev SDL2 Tutorial at http://www.willusher.io/pages/sdl2/
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <iostream>
+#include "sdlwrapper.h"
 
 const int SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480, TILE_SIZE = 40;
 
