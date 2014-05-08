@@ -75,21 +75,25 @@ int main(int argc, char **argv){
         logSDLError(std::cout, "TTF_Init");
         return 2;
     }
+
     SDL_Window *window = SDL_CreateWindow("LearningSDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr){
         logSDLError(std::cout, "SDL_CreateWindow");
         return 3;
     }
+
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr){
         logSDLError(std::cout, "SDL_CreateRenderer");
         return 4;
     }
+
     SDL_Texture *background = loadTexture("background.bmp", renderer);
     SDL_Texture *image = loadTexture("sample.png", renderer);
     if (background == nullptr || image == nullptr){
         return 5;
     }
+
     int imageWidth = 100, imageHeight = 100;
     int x = SCREEN_WIDTH / 2 - imageWidth / 2, y = SCREEN_HEIGHT / 2 - imageHeight / 2;
     SDL_Rect clips[4];
@@ -100,7 +104,9 @@ int main(int argc, char **argv){
         clips[pos].h = imageHeight;
     }
     int useClip = 0;
+
     std::string fontLocation = "fonts/FreeMono.ttf";
+
     SDL_Event e;
     bool quit = false;
     while (!quit){
@@ -140,6 +146,7 @@ int main(int argc, char **argv){
                 quit = true;
             }
         }
+
         SDL_RenderClear(renderer);
         int xTiles = SCREEN_WIDTH / TILE_SIZE, yTiles = SCREEN_HEIGHT / TILE_SIZE;
         for (int pos = 0; pos < xTiles * yTiles; ++pos){

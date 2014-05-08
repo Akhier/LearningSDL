@@ -18,6 +18,9 @@ class SDLWrapper
         SDL_Texture* renderText(const std::string &message, const std::string &fontfile, SDL_Color color, int fontsize, SDL_Renderer *renderer);
     private:
         void _logerror(std::ostream &os, const std::string &message) {os << message << " Error: " << SDL_GetError() << std::endl;}
+        int _sdlwrapperfailedtoinit = -1;
+        SDL_Window* _window;
+        SDL_Renderer* _renderer;
 };
 
 #endif // SDLWRAPPER_H

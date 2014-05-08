@@ -2,7 +2,24 @@
 
 SDLWrapper::SDLWrapper()
 {
-    //ctor
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+        _logerror(std::cout, "SDL_Init");
+        _sdlwrapperfailedtoinit = 0;
+    }
+    if (TTF_Init() != 0){
+        _logerror(std::cout, "TTF_Init");
+        _sdlwrapperfailedtoinit = 1;
+    }
+    _window = SDL_CreateWindow("LearningSDL", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == nullptr){
+        _logerror(std::cout, "SDL_CreateWindow");
+        _sdlwrapperfailedtoinit = 2;
+    }
+    _renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr){
+        _logerror(std::cout, "SDL_CreateRenderer");
+        _sdlwrapperfailedtoinit = 3;
+    }
 }
 
 SDLWrapper::~SDLWrapper()
