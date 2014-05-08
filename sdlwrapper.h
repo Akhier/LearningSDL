@@ -6,6 +6,7 @@
 #include <SDL_ttf.h>
 #include <iostream>
 #include <vector>
+#include <map>
 
 class SDLWrapper
 {
@@ -16,8 +17,10 @@ class SDLWrapper
         void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, int w, int h);
         void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, SDL_Rect destination, SDL_Rect *clip);
         void renderTexture(SDL_Texture *texture, SDL_Renderer *renderer, int x, int y, SDL_Rect *clip);
+        int createText(const std::string &message, const std::string &fontfile, int fontsize);
         int createTexture(std::string &file);
         void destroyTexture(int textureid);
+        void setupTileset(int textureid, std::vector<int[]> *tilesetinfo);
     private:
         void _logerror(std::ostream &os, const std::string &message) {os << message << " Error: " << SDL_GetError() << std::endl;}
         int _sdlwrapperfailedtoinit = -1;
@@ -26,6 +29,7 @@ class SDLWrapper
         SDL_Window* _window;
         SDL_Renderer* _renderer;
         std::vector<SDL_Texture*> _textures;
+        std::map<int, std::vector<SDL_Rect>> _tilesetdefinition;
 };
 
 #endif // SDLWRAPPER_H

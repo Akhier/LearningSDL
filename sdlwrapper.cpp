@@ -79,6 +79,12 @@ SDL_Texture* SDLWrapper::_rendertext(const std::string &message, const std::stri
     return texture;
 }
 
+int SDLWrapper::createText(const std::string &message, const std::string &fontfile, int fontsize){
+    SDL_Color color = {0, 0, 0};
+    _textures.push_back(_rendertext(message, fontfile, color, fontsize, _renderer));
+    return _textures.size() - 1;
+}
+
 int SDLWrapper::createTexture(std::string &file){
     _textures.push_back(_loadtexture(file, _renderer));
     return _textures.size() - 1;
@@ -86,6 +92,17 @@ int SDLWrapper::createTexture(std::string &file){
 
 void SDLWrapper::destroyTexture(int textureid){
     SDL_DestroyTexture(_textures[textureid]);
+}
+
+void SDLWrapper::setupTileset(int textureid, std::vector<int[]> *tilesetinfo){
+    for (int iter = 0; iter < tilesetinfo.size(); ++iter){
+        SDL_Rect tempRect;
+        temp.x = tilesetinfo[iter][0];
+        temp.y = tilesetinfo[iter][1];
+        temp.w = tilesetinfo[iter][2];
+        temp.h = tilesetinfo[iter][3];
+        _tilesetdefinition[textureid].push_back(tempRect);
+    }
 }
 
 SDLWrapper::~SDLWrapper(){
